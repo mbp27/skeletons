@@ -218,27 +218,34 @@ class SkeletonListTile extends StatelessWidget {
 class SkeletonListView extends StatelessWidget {
   final Widget? item;
   final Widget Function(BuildContext, int)? itemBuilder;
-  final int? itemCount;
+  final int itemCount;
   final bool scrollable;
   final EdgeInsets? padding;
-  final double? spacing;
+  final double spacing;
+  final bool shrinkWrap;
+  final Widget Function(BuildContext, int)? separatorBuilder;
 
   SkeletonListView({
     Key? key,
     this.item,
     this.itemBuilder,
-    this.itemCount,
+    this.itemCount = 3,
     this.scrollable = false,
-    this.padding = const EdgeInsets.symmetric(horizontal: 16),
-    this.spacing = 8,
+    this.padding = const EdgeInsets.symmetric(horizontal: 16.0),
+    this.spacing = 8.0,
+    this.shrinkWrap = true,
+    this.separatorBuilder,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SkeletonItem(
-      child: ListView.builder(
+      child: ListView.separated(
+        separatorBuilder:
+            separatorBuilder ?? (context, index) => SizedBox(height: spacing),
         padding: padding,
         physics: scrollable ? null : NeverScrollableScrollPhysics(),
+        shrinkWrap: shrinkWrap,
         itemCount: itemCount,
         itemBuilder: itemBuilder ??
             (context, index) =>
